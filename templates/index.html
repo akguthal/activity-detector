@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/css/app.css">
+        <script type="text/javascript" src="/static/js/main.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="section">
+            <h1>Activity Detector</h1>
+            <p>This application will read your phone's accelerometer data and determine what activity
+                you performed. 
+            </p>
+            <hr />
+            <div class="uploadSection">
+                <p>Upload your data here:</p>
+                <input id="fileUploader" type="file" name="fileToUpload" id="fileToUpload" />
+                <button class="sendbutton btn btn-primary" onclick="sendData()">Send Data</button>        
+            </div>
+            <h2>Detected Activity: <span id="activity"></span></h2>          
+        </div>
+    </body>
+</html>
