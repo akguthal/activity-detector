@@ -25,6 +25,7 @@ class ActivityDetect:
 
 		return
 
+
 	# Module for Split
 	def split(self, data_array, data_labels, train_size = None):
 		# Generate random numbers
@@ -41,7 +42,7 @@ class ActivityDetect:
 
 		# Training Size Initialisation
 		if train_size == None:
-			train_size = int(0.8*len(data_array))
+			train_size = int(0.9*len(data_array))
 
 
 		# Training Data
@@ -80,6 +81,7 @@ class ActivityDetect:
 		#print(clf.score(curr_training_data, curr_training_labels))
 
 		# Predicted Labels
+		#labels = []
 		labels = clf.predict(curr_test_data)
 
 
@@ -88,9 +90,8 @@ class ActivityDetect:
 
 	# Main Function
 	def main(self):
-
 		# Data Matrix
-		data_mat = scipy.io.loadmat('data/input_data.mat')
+		data_mat = scipy.io.loadmat('data/acc_data.mat')
 
 		# Data Array
 		data_array = data_mat["acc_data"]
@@ -131,18 +132,37 @@ class ActivityDetect:
 		#print(full_data)
 
 		
-		return labels.tolist()
+		return labels
 
 
-def run_model():
+
+# Main Function
+def function_main():
 	# Initialise with the object
 	activity_object = ActivityDetect()
-
 
 	# Call the detection function
 	final_labels = activity_object.main()
 
-	return final_labels
+	# Normalising the final_labels
+	final_labels = final_labels - 1
+
+	# Data Labels
+	label_names = scipy.io.loadmat('data/acc_names.mat')['acc_names']
+
+	# Complete label names
+	names = np.array([item[0] for item in label_names[0]])
+
+	# Final Labels
+	label_to_return = list(names[final_labels])
+
+
+	return label_to_return
+
+
+
+function_main()
+
 
 
 
