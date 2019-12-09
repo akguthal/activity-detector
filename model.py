@@ -88,8 +88,9 @@ class ActivityDetect:
 
 	# Main Function
 	def main(self):
+
 		# Data Matrix
-		data_mat = scipy.io.loadmat('data/acc_data.mat')
+		data_mat = scipy.io.loadmat('data/input_data.mat')
 
 		# Data Array
 		data_array = data_mat["acc_data"]
@@ -130,17 +131,18 @@ class ActivityDetect:
 		#print(full_data)
 
 		
-		return labels
+		return labels.tolist()
 
 
+def run_model():
+	# Initialise with the object
+	activity_object = ActivityDetect()
 
-# Initialise with the object
-activity_object = ActivityDetect()
 
+	# Call the detection function
+	final_labels = activity_object.main()
 
-# Call the detection function
-final_labels = activity_object.main()
+	return final_labels
 
-print(final_labels)
 
 
