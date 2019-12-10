@@ -117,7 +117,6 @@ class ActivityDetect:
 		# Training Data and Test Data
 		train_data, train_labels, test_datas, test_label = self.split(data_array, data_labels)
 
-
 		#print(data_array.shape)
 		#pca = PCA(n_components=2)
 		#dim = pca.fit_transform(data_array)
@@ -128,7 +127,6 @@ class ActivityDetect:
 		#plt.ylabel('Feature 2')
 		#plt.show()
 
-
 		# Initialise the Variables
 		self.training_data = train_data
 		self.training_labels = train_labels
@@ -138,13 +136,12 @@ class ActivityDetect:
 		# Call the model
 		labels = self.model()
 
-
 		# Full Data
 		#full_data = scipy.io.loadmat('data/full_data.mat')
 		#print(full_data)
 
-		
 		return labels
+
 
 
 	# Function to test the model with data
@@ -181,6 +178,18 @@ class ActivityDetect:
 
 
 
+# Printing the activities
+def print_activities(distributions):
+	# Distributions
+	distributions = dict(distributions)
+
+	for key, value in distributions.items():
+		print(str(key) + ": ", value)
+
+
+	return
+
+
 # Main Function
 def function_main(train = True):
 	# Initialise with the object
@@ -191,7 +200,6 @@ def function_main(train = True):
 		# Call the detection function - For training
 		final_labels = activity_object.main()
 
-		return 
 
 	# Condition when the train is False
 	else:
@@ -207,10 +215,11 @@ def function_main(train = True):
 		print("Total Measurements: ")
 		print(count_of_measurements)
 
+		print_activities(distributions)
 
 
-		print(distributions)
-		return distributions
+	
+	return
 
 
 
