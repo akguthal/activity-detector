@@ -9,6 +9,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+import pickle
+from collections import Counter
 
 
 """ Class for Activity Recognition from Accelerometer Data """
@@ -58,6 +60,7 @@ class ActivityDetect:
 		return train_data, train_labels, test_data, test_labels
 
 
+
 	# Define the Training Model
 	def model(self):
 		# Check for error
@@ -74,15 +77,24 @@ class ActivityDetect:
 		curr_test_labels = self.test_labels
 
 
+		# Store the test data
+		np.save('test_data.npy', curr_test_data)
+		np.save('test_labels.npy', curr_test_labels)
+
+
 		# Train a classifier using the training data 
 		clf = SVC(gamma='auto')
 		clf.fit(curr_training_data, curr_training_labels)
 
 		#print(clf.score(curr_training_data, curr_training_labels))
 
+		# Store the model checkpoint
+		filename = 'finalized_model.sav'
+		pickle.dump(clf, open(filename, 'wb'))
+
 		# Predicted Labels
-		#labels = []
-		labels = clf.predict(curr_test_data)
+		labels = []
+		#labels = clf.predict(curr_test_data)
 
 
 		return labels
@@ -135,33 +147,75 @@ class ActivityDetect:
 		return labels
 
 
+	# Function to test the model with data
+	def prediction_function(self, test_data, test_labels):
+		# Current filename
+		filename = 'finalized_model.sav'
+
+		# Loaded model
+		loaded_model = pickle.load(open(filename, 'rb'))
+
+		# Write the prediction function
+		predictions = loaded_model.predict(test_data)
+
+		# Final Labels 
+		final_labels = predictions - 1
+
+		# Data Labels
+		label_names = scipy.io.loadmat('data/acc_names.mat')['acc_names']
+
+		# Complete label names
+		names = np.array([item[0] for item in label_names[0]])
+
+		# Final Labels
+		label_to_return = list(names[final_labels])
+
+		# Distributions for the labels
+		distributions = Counter(label_to_return)
+
+		count_of_measurements = len(label_to_return)
+
+
+		return distributions, count_of_measurements
+
+
+
 
 # Main Function
-def function_main():
+def function_main(train = True):
 	# Initialise with the object
 	activity_object = ActivityDetect()
 
-	# Call the detection function
-	final_labels = activity_object.main()
+	# When train is true
+	if train == True:
+		# Call the detection function - For training
+		final_labels = activity_object.main()
 
-	# Normalising the final_labels
-	final_labels = final_labels - 1
+		return 
 
-	# Data Labels
-	label_names = scipy.io.loadmat('data/acc_names.mat')['acc_names']
+	# Condition when the train is False
+	else:
+		# Test Training Data
+		test_training_data = np.load('data/test_data.npy')
 
-	# Complete label names
-	names = np.array([item[0] for item in label_names[0]])
+		# Test Labelled Data
+		test_labelled_data = np.load('data/test_labels.npy')
 
-	# Final Labels
-	label_to_return = list(names[final_labels])
+		# Call the prediction function - with the training data and test data
+		distributions, count_of_measurements = activity_object.prediction_function(test_training_data, test_labelled_data)
+
+		print("Total Measurements: ")
+		print(count_of_measurements)
 
 
-	return label_to_return
+
+		print(distributions)
+		return distributions
 
 
 
-function_main()
+
+function_main(False)
 
 
 
