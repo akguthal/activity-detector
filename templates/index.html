@@ -6,6 +6,7 @@
         <script type="text/javascript" src="/static/js/main.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
     </head>
     <body>
         <div class="section">
@@ -19,7 +20,12 @@
                 <input id="fileUploader" type="file" name="fileToUpload" id="fileToUpload" />
                 <button id="sendDataButton" class="sendbutton btn btn-primary" onclick="sendData()">Send Data</button>        
             </div>
-            <h2>Detected Activity: <span id="activity"></span></h2>          
+            <div class="resultsSection">
+                <h2 id="numResults"></h2>
+                <div class="chartContainer">
+                    <canvas id="myChart"></canvas>       
+                </div>
+            </div>
         </div>
     </body>
 </html>

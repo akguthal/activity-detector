@@ -42,8 +42,13 @@ p {
 }
 
 .sendbutton:hover, .sendbutton:active {
-    background-color: lightgrey;
+    background-color: white;
+    color: #1666B7;
     border: none;
+}
+
+.sendbutton:disabled {
+    background-color: lightgrey;
 }
 
 .section {
@@ -60,6 +65,9 @@ p {
     .sendbutton {
         font-size: 1em;
     }
+    .chartContainer {
+        width: 100%;
+    }
 }
 
 hr {
@@ -69,4 +77,8 @@ hr {
     border-top: 1px solid white;
     margin: 1em 0;
     padding: 0;
+}
+
+.chartContainer {
+    width: 70%;
 }

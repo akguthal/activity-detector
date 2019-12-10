@@ -11,8 +11,9 @@ def home():
 @app.route("/compute", methods=['POST'])
 def compute():
     data = request.files['file']
-    data.save('data/input_data.mat')
-    return json.dumps({ 'result': run_model() })
+    data.save('model/input_data.txt')
+    results = run_model()
+    return json.dumps({ 'result': results[0], 'count': results[1] })
     
 if __name__ == "__main__":
     app.run(debug=True)

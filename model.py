@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import pickle
 from collections import Counter
+import os.path
 
 
 """ Class for Activity Recognition from Accelerometer Data """
@@ -78,7 +79,6 @@ class ActivityDetect:
 
 
 		# Store the test data
-		np.save('test_data.npy', curr_test_data)
 		np.save('test_labels.npy', curr_test_labels)
 
 
@@ -89,7 +89,7 @@ class ActivityDetect:
 		#print(clf.score(curr_training_data, curr_training_labels))
 
 		# Store the model checkpoint
-		filename = 'finalized_model.sav'
+		filename = 'model/finalized_model.sav'
 		pickle.dump(clf, open(filename, 'wb'))
 
 		# Predicted Labels
@@ -103,13 +103,13 @@ class ActivityDetect:
 	# Main Function
 	def main(self):
 		# Data Matrix
-		data_mat = scipy.io.loadmat('data/acc_data.mat')
+		data_mat = scipy.io.loadmat('model/acc_data.mat')
 
 		# Data Array
 		data_array = data_mat["acc_data"]
 
 		# The raw data label contains : Label, Label of subject performing the activity, Number of Trials
-		data_label_vector = scipy.io.loadmat('data/acc_labels.mat')["acc_labels"]
+		data_label_vector = scipy.io.loadmat('model/acc_labels.mat')["acc_labels"]
 
 		# Data Labels
 		data_labels = data_label_vector[:,0]
@@ -147,7 +147,7 @@ class ActivityDetect:
 	# Function to test the model with data
 	def prediction_function(self, test_data, test_labels):
 		# Current filename
-		filename = 'finalized_model.sav'
+		filename = 'model/finalized_model.sav'
 
 		# Loaded model
 		loaded_model = pickle.load(open(filename, 'rb'))
@@ -159,7 +159,7 @@ class ActivityDetect:
 		final_labels = predictions - 1
 
 		# Data Labels
-		label_names = scipy.io.loadmat('data/acc_names.mat')['acc_names']
+		label_names = scipy.io.loadmat('model/acc_names.mat')['acc_names']
 
 		# Complete label names
 		names = np.array([item[0] for item in label_names[0]])
@@ -191,41 +191,29 @@ def print_activities(distributions):
 
 
 # Main Function
-def function_main(train = True):
+def run_model():
 	# Initialise with the object
 	activity_object = ActivityDetect()
 
 	# When train is true
-	if train == True:
+	if not os.path.isfile('model/finalized_model.sav'):
+		print("Training Model")
 		# Call the detection function - For training
-		final_labels = activity_object.main()
+		activity_object.main()
 
+	print("Determining Activity...")
+	# Test Training Data
+	test_training_data = np.loadtxt('model/input_data.txt')
 
-	# Condition when the train is False
-	else:
-		# Test Training Data
-		test_training_data = np.load('data/test_data.npy')
+	# Test Labelled Data
+	test_labelled_data = np.load('model/test_labels.npy')
 
-		# Test Labelled Data
-		test_labelled_data = np.load('data/test_labels.npy')
+	# Call the prediction function - with the training data and test data
+	distributions, count_of_measurements = activity_object.prediction_function(test_training_data, test_labelled_data)
 
-		# Call the prediction function - with the training data and test data
-		distributions, count_of_measurements = activity_object.prediction_function(test_training_data, test_labelled_data)
+	print("Total Measurements: ")
+	print(count_of_measurements)
 
-		print("Total Measurements: ")
-		print(count_of_measurements)
-
-		print_activities(distributions)
-
-
+	print_activities(distributions)
 	
-	return
-
-
-
-
-function_main(False)
-
-
-
-
+	return distributions, count_of_measurements
