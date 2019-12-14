@@ -45,6 +45,8 @@ generateChart = (data) => {
                     yAxes: [{
                         ticks: {
                             beginAtZero: true,
+                            suggestedMin: 0,
+                            suggestedMax: data.count,
                             fontColor: "#FFF"
                         },
                         gridLines: {

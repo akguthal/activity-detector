@@ -168,7 +168,7 @@ class ActivityDetect:
 		label_to_return = list(names[final_labels])
 
 		# Distributions for the labels
-		distributions = Counter(label_to_return)
+		distributions = dict(Counter(label_to_return).most_common())
 
 		count_of_measurements = len(label_to_return)
 
